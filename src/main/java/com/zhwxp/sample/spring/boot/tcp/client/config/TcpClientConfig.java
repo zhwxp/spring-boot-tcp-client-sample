@@ -1,6 +1,8 @@
 package com.zhwxp.sample.spring.boot.tcp.client.config;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.integration.annotation.ServiceActivator;
@@ -15,7 +17,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @Configuration
 @EnableScheduling
-public class TcpClientConfig {
+public class TcpClientConfig implements ApplicationEventPublisherAware {
 
     @Value("${tcp.server.host}")
     private String host;
@@ -26,10 +28,18 @@ public class TcpClientConfig {
     @Value("${tcp.client.connection.poolSize}")
     private int connectionPoolSize;
 
+    private ApplicationEventPublisher applicationEventPublisher;
+
+    @Override
+    public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
+        this.applicationEventPublisher = applicationEventPublisher;
+    }
+
     @Bean
     public AbstractClientConnectionFactory clientConnectionFactory() {
         TcpNioClientConnectionFactory tcpNioClientConnectionFactory = new TcpNioClientConnectionFactory(host, port);
         tcpNioClientConnectionFactory.setUsingDirectBuffers(true);
+        tcpNioClientConnectionFactory.setApplicationEventPublisher(applicationEventPublisher);
         return new CachingClientConnectionFactory(tcpNioClientConnectionFactory, connectionPoolSize);
     }
 
