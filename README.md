@@ -65,6 +65,14 @@ $socket.Close()
 $listener.Stop()
 ```
 
+## Tests
+
+```bash
+./mvnw test
+```
+
+`TcpClientIntegrationTests` starts a stub server on an OS-assigned port, points the application at it, and asserts the round trip through the gateway — both for a single request and for two requests, which the stub answers on one accepted connection to show that the pooled connection is reused.
+
 ## Configuration
 
 `src/main/resources/application.properties`:
@@ -74,6 +82,7 @@ $listener.Stop()
 | `tcp.server.host` | `localhost` | Host of the TCP server to send to |
 | `tcp.server.port` | `10001` | Port of the TCP server to send to |
 | `tcp.client.connection.poolSize` | `50` | Maximum number of pooled connections |
+| `tcp.client.scheduler.enabled` | `true` | Whether the scheduled job sends a message every second |
 
 Override at startup when needed:
 
@@ -96,7 +105,7 @@ MessageService ←──────────────── reply ──�
 | `Application` | Spring Boot entry point |
 | `config/TcpClientConfig` | NIO client connection factory with pooling, outbound channel, outbound gateway |
 | `gateway/TcpClientGateway` | `@MessagingGateway` on `outboundChannel`; `send` blocks until the reply arrives |
-| `scheduler/MessageJobScheduler` | `@Scheduled` job that triggers one send per second |
+| `scheduler/MessageJobScheduler` | `@Scheduled` job that triggers one send per second; can be switched off |
 | `service/MessageService` | Message sending contract |
 | `service/impl/MessageServiceImpl` | Sends a timestamp and logs the reply |
 
