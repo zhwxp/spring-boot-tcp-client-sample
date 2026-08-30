@@ -4,13 +4,15 @@ A minimal TCP client built with Spring Boot and Spring Integration IP. A schedul
 
 The matching server sample is [spring-boot-tcp-server-sample](https://github.com/zhwxp/spring-boot-tcp-server-sample).
 
+Looking for the Java 8 version? See the [`jdk8`](https://github.com/zhwxp/spring-boot-tcp-client-sample/tree/jdk8) branch, which stays on Spring Boot 2.7.18.
+
 ## Requirements
 
-* JDK 8 or later
+* JDK 17 or later
 * No Maven installation required — the bundled wrapper (`mvnw` / `mvnw.cmd`) provisions Maven 3.9.16 on first use
 * A TCP server on `tcp.server.host:tcp.server.port` that answers with a CRLF-terminated line
 
-Built with Spring Boot 2.7.18 — the last release line that supports Java 8. Spring Boot 3.x requires Java 17.
+Built with Spring Boot 3.5.16, which requires Java 17 as a minimum.
 
 ## Build
 
